@@ -102,3 +102,11 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+.DS_Store
+.idea/misc.xml
+.idea/modules.xml
+.idea/uncertainopt.iml
+.idea/vcs.xml
+.idea/workspace.xml
+.idea/vcs.xml
+*.xml
