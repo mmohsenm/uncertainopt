@@ -10,12 +10,22 @@ Dynamic Programming and Robust Optimization, you see they get too technical
 too soon which puts a burden on their applicability. 
 In this guide, I'm trying to provide a simple tutorial on how to 
 solve optimization problems (mainly linear and mixed integer linear programming) 
-when we face some uncertainty. I give a simple practical example and show 
+when we face some uncertainty. We give a simple practical example and show 
 how one can formulate that problem in the presence of uncertainty, provide 
 useful algorithms and present sample codes in Python for reference.
 
-## Modeling Uncertainty
+## Prerequisites
+We assume a reader of this tutorial is familiar with basics Linear and Mixed Integer Programming, 
+and knows what _Decision Variables_, _Constraints_, _Objective Function_, and _Non-negativity restriction_ are.
 
+
+## Modeling Uncertainty
+Before explaining possible approaches one may take to solve an optimization problem under uncertainty,
+let me refresh your memory on deterministic LP/MIP problems. 
+A typical LP/MIP problem has a mathematical form like this:
+
+
+   
 ### Mean value, Worst case and Best case optimization
 ### Chance Constrained Optimization
 ### Recourse Models
