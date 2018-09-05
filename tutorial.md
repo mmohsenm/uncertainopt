@@ -24,8 +24,9 @@ Before explaining possible approaches one may take to solve an optimization prob
 let me refresh your memory on deterministic LP/MIP problems. 
 A typical LP/MIP problem has a mathematical form like this:
 
-<img src="https://github.com/mmohsenm/uncertainopt/blob/master/images/lp_model.jpg" width="40%">
-
+<p align="center">
+<img  src="https://github.com/mmohsenm/uncertainopt/blob/master/images/lp_model.jpg" width="40%">
+</p>
 
    
 ### Mean value, Worst case and Best case optimization
