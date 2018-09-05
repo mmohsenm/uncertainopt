@@ -1,5 +1,6 @@
 # A Practical Guide to Optimization under Uncertainty
 
+
 Optimization under Uncertainty has lots of used cases in many real world 
 and practical problems in the area of supply chain, transportation, 
 retail and finance. However, current available resources provide limited 
