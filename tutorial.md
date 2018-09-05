@@ -23,7 +23,7 @@ and knows what _Decision Variables_, _Constraints_, _Objective Function_, and _N
 Before explaining possible approaches one may take to solve an optimization problem under uncertainty,
 let me refresh your memory on deterministic LP/MIP problems. 
 A typical LP/MIP problem has a mathematical form like this:
-
+![alt text][lp_model]
 
    
 ### Mean value, Worst case and Best case optimization
@@ -52,3 +52,4 @@ with optimization under uncertainty.
 
 *
 
+[lp_model]: https://github.com/mmohsenm/uncertainopt/blob/master/images/lp_model.jpg "lp text"
