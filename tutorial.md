@@ -28,16 +28,34 @@ A typical LP/MIP problem has a mathematical form like this:
 <img  src="https://github.com/mmohsenm/uncertainopt/blob/master/images/lp_model.png" width="40%">
 </p>
 
-Here, <img  src="https://github.com/mmohsenm/uncertainopt/blob/master/images/obj_coef.png" width="12%" height="10%">
-are objective coefficient parameters
-   
-### Mean value, Worst case and Best case optimization
-### Chance Constrained Optimization
-### Recourse Models``
-#### Two-stage Models
-#### Multi-stage Models
+Here, <img  src="https://github.com/mmohsenm/uncertainopt/blob/master/images/obj_coef.png" width="12%">
+are objective coefficient parameters (lets call them set `C`), 
+<img  src="https://github.com/mmohsenm/uncertainopt/blob/master/images/cons_coef.png" width="12%">
+are constraints coefficient parameters (lets call them set `A`), 
+and <img  src="https://github.com/mmohsenm/uncertainopt/blob/master/images/rhs.png" width="12%">
+are right hand side parameters (lets call them `b`). Either of these parameters 
+or all of them can be uncertain or random. You may have their probability distribution, or not. 
+Depending on which set is random, one might adopt different approach to model and solve the underlying problem.
+In general, there are two approaches to optimization under uncertainty:
+* Here & Now
+    - Estimate (guess) random parameters and solve the problem
+    - Use Chance Constraints
+* Wait & See
+In this approach generally you can take corrective actions 
+when you observe the true value of an uncertain parameter. So, you can use either:
+    - Recourse Models
+    - Dynamic Programming
+    
+In the following sections, we explain each of these methods in details using the following simple example.
+### Here & Now
+#### Mean value, Worst case and Best case optimization
+#### Chance Constrained Optimization
+### Wait & See
+#### Recourse Models``
+##### Two-stage Models
+##### Multi-stage Models
 * *Nonanticipativity*
-### Dynamic Programming
+#### Dynamic Programming
 
 ## Optimization Algorithms
 Here we provide some helpful algorithms that come handy when dealing 
