@@ -28,7 +28,7 @@ A typical LP/MIP problem has a mathematical form like this:
 <img  src="https://github.com/mmohsenm/uncertainopt/blob/master/images/lp_model.png" width="40%">
 </p>
 
-Here, ![obj_coef](https://github.com/mmohsenm/uncertainopt/blob/master/images/obj_coef.png) 
+Here, <img  src="https://github.com/mmohsenm/uncertainopt/blob/master/images/obj_coef.png" width="12%" height="10%">
 are objective coefficient parameters
    
 ### Mean value, Worst case and Best case optimization
