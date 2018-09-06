@@ -25,13 +25,15 @@ let me refresh your memory on deterministic LP/MIP problems.
 A typical LP/MIP problem has a mathematical form like this:
 
 <p align="center">
-<img  src="https://github.com/mmohsenm/uncertainopt/blob/master/images/lp_model.jpg" width="40%">
+<img  src="https://github.com/mmohsenm/uncertainopt/blob/master/images/lp_model.png" width="40%">
 </p>
 
+Here, ![obj_coef](https://github.com/mmohsenm/uncertainopt/blob/master/images/obj_coef.png) 
+are objective coefficient parameters
    
 ### Mean value, Worst case and Best case optimization
 ### Chance Constrained Optimization
-### Recourse Models
+### Recourse Models``
 #### Two-stage Models
 #### Multi-stage Models
 * *Nonanticipativity*
@@ -54,4 +56,6 @@ with optimization under uncertainty.
 ## Acknowledgments
 
 *
+
+
 
