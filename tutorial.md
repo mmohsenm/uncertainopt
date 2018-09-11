@@ -34,7 +34,7 @@ are objective coefficient parameters (lets call them set `C`),
 are constraints coefficient parameters (lets call them set `A`), 
 and <img  src="https://github.com/mmohsenm/uncertainopt/blob/master/images/rhs.png" width="11%">
 are right hand side parameters (lets call them `b`). Either of these parameters 
-or all of them can be uncertain or random. You may have their probability distribution, or not. 
+or all of them can be uncertain or random, and you may have their probability distribution, or not. 
 Depending on which set is random, one might adopt different approach to model and solve the underlying problem.
 In general, there are two approaches to optimization under uncertainty:
 * Here & Now
@@ -48,7 +48,10 @@ when you observe the true value of an uncertain parameter. So, you can use eithe
     
 In the following sections, we explain each of these methods in details using the following simple example.
 ### Here & Now
-#### Mean value, Worst case and Best case optimization
+In this approach, we estimate or guess the highly possible outcome of random parameters, 
+or optimize under certain confidence level.
+#### Estimate Parameters
+Use mean value or quartile values. Examples: delivery time, portfolio optimization, etc
 #### Chance Constrained Optimization
 ### Wait & See
 #### Recourse Models
