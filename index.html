@@ -104,7 +104,8 @@ color: 371309
 
 
 ol{
-padding-left: 100px;
+padding-right: 110px;
+padding-left: 110px;
 }
 
 p{
@@ -112,18 +113,18 @@ text-align: justify;
 
 }
 </style>
-
 </head>
+
 <h1 align="center"; padding-top: 50px;>A Practical Guide to Optimization under Uncertainty</h1>
 <p class="mrg">
 Optimization under Uncertainty has lots of used cases in many real world
 and practical problems in the area of supply chain, transportation,
 retail and finance. However, current available resources provide limited
-help to industry practitioners.
+help to industry practitioners.<br />
 If you look at some online resources on Two-stage Stochastic Programming,
 Dynamic Programming and Robust Optimization, you see they get too technical
 too soon which puts a burden on their applicability.
-In this guide, I'm trying to provide a simple tutorial on how to
+In this guide, we are providing a simple tutorial on how to
 solve optimization problems (mainly linear and mixed integer linear programming)
 when we face some uncertainty. We give a simple practical example and show
 how one can formulate that problem in the presence of uncertainty, provide
@@ -132,13 +133,14 @@ useful algorithms and present sample codes in Python for reference.
 <h2> Prerequisites </h3>
 <p class="mrg">
 We assume a reader of this tutorial is familiar with basics Linear and Mixed Integer Programming,
-and knows what <em>Decision Variables</em>, <em>Constraints</em>, <em>Objective Function</em>, and <em>Non-negativity restriction</em> are.
+and knows what <em>Decision Variables</em>, <em>Constraints</em>, <em>Objective Function</em>,
+and <em>Non-negativity restriction</em> are.
 </p>
 
 <h2>Modeling Uncertainty</h4>
 <p class="mrg">
 Before explaining possible approaches one may take to solve an optimization problem under uncertainty,
-let me refresh your memory on deterministic LP/MIP problems.
+let us refresh your memory on deterministic LP/MIP problems.
 A typical LP/MIP problem has a mathematical form like this:</p>
 
 <div style="left;" class="math display">
@@ -164,39 +166,74 @@ and <span class="math inline">$b_{1}, b_{2}, \cdots, b_{m}$</span>
 are right hand side parameters. Either of these parameters
 or all of them can be uncertain or random, and you may have their probability distribution, or not.
 Depending on which set is random, one might adopt different approach to model and solve the underlying problem.
+
 In general, there are two approaches to optimization under uncertainty:
 <ol>
 <ul>
-<li>Here & Now</li>
+<li><b>Robust Optimization Models</b></li>
+In these types of models, one consider the worst possible outcome and optimize decisions based on that.
+As mentioned <a href="https://dspace.mit.edu/openaccess-disseminate/1721.1/66198">here</a>,
+in robust optimization the uncertainty is not stochastic, but rather deterministic and set-based.
+We are not covering robust optimization in this tutorial.
+There are plenty of good resources online that intersted readers may consult with.
+<li><b>Chance Constraint Models</b></li>
+In these types of models, one may care about risk and managing it,
+and use quantiles and variance to evaluate value-at-risk, expected shorfall, etc.,
+and make decisions to optimize them.
+<li><b>Recourse Models</b></li>
+In this approach generally you can take corrective actions when you observe the true value of an uncertain parameter.
     <ul>
-    <li>Estimate (guess) random parameters and solve the problem</li>
-    <li>Use Chance Constraints</li>
+    <li>Two-Stage Models</li>
+    <li>Multi-Stage Models</li>
     </ul>
-<li>Wait & See</li>
-In this approach generally you can take corrective actions
-when you observe the true value of an uncertain parameter. So, you can use either:
-    <ul>
-    <li>Recourse Models</li>
-    <li>Dynamic Programming</li>
-   </ul></li>
-</ul></li>
+<li><b>Dynamic Programming</b></li>
 </ol>
 <p class="mrg">
-In the following sections, we explain each of these methods in details using the following simple example.
+In the following sections, we explain each of these methods in details using the following simple example.</br>
+Consider a production plant which produces <span class="math inline">$N$</span> products. This plant can either produce,
+or source this product to satisfy customers' monthly demand
+<span class="math inline">$D_{nt}, \ t=1,2,\cdots,12, n=1,2,\cdots,N$</span> for a year.
+The unit production and sourcing costs are <span class="math inline">$c^p_{nt}, \ t=1,2,\cdots,12, n=1,2,\cdots,N$</span> and
+<span class="math inline">$c^s_{nt}, \ t=1,2,\cdots,12, n=1,2,\cdots,N$</span>, respectively.
+In case of over production
+in month <span class="math inline">$t$</span> , it can hold inventory at cost
+<span class="math inline">$c^h_{nt}, \ t=1,2,\cdots,12, n=1,2,\cdots,N$</span>.
+In every month this plant has an efficiency rate of <span class="math inline">$r_{nt}\leq 1, \ t=1,2,\cdots,12, n=1,2,\cdots,N$</span>.
+Total production capacity in each month depends on the availability of raw material.
+<span class="math inline">$C_{t}, \ t=1,2,\cdots,12$</span> is the total monthly capacity in units.
+We are looking for the best set of sourcing and production decisions that minimizes total sourcing, holding and production costs.
+Let <span class="math inline">$X_{t}, \ t=1,2,\cdots,12$</span> and
+<span class="math inline">$S_{t}, \ t=1,2,\cdots,12$</span>
+ be decision variables representing
+monthly production and sourcing amount, respectivly. In addition,
+we define <span class="math inline">$I_{nt}, \ t=1,2,\cdots,12$</span> as inventory level in month
+<span class="math inline">$t$</span> for product <span class="math inline">$n$</span>
+where <span class="math inline">$I_{n0}=\bar{I}_{n}$</span> is the starting inventory
+for product <span class="math inline">$n$</span>.
+Here is the mathematical formulation:
 </p>
-
-<h3> Here & Now</h3>
+<div style="left;" class="math display">
+\[
+\left. \begin{array}{lll}
+\text{min}& \sum_{n=1}^{N}\sum_{t=1}^{12}{c^p_{nt}X_{nt}+c^s_{nt}S_{nt}+c^h_{nt}I_{nt}}&\\
+\text{s.t.}\\
+&\sum_{n=1}^{N}{r_{nt}x_{nt}}\leq C_{t}&\forall t\\
+&I_{nt-1}+S_{nt} + X_{nt} - I_{nt}= D_{nt}&\forall t\quad \forall n\\
+&S_{nt}, X_{nt}, I_{nt} \geq 0&\forall t\quad \forall n\\
+&I_{n0}=\bar{I}_{n}&\forall n
+\end{array}
+\right.
+\]</div>
+<h3>Worst-Case and Chance Constraint Models</h3>
 <p class ="mrg"> In this approach, we estimate or guess the highly possible outcome of random parameters,
 or optimize under certain confidence level.
-<h4>Estimate Parameters</h4>
-<p class ="mrg">Use mean value or quartile values. Examples: delivery time, portfolio optimization, etc</p>
-<h4>Chance Constrained Optimization</h4>
-<h3>Wait & See</h3>
-<h4>Recourse Models</h4>
+<h3>Recourse Models</h3>
 <h5>Two-stage Models</h4>
 <h5>Multi-stage Models</h5>
-<p class ="mrg">* *Nonanticipativity*
-<h4>Dynamic Programming</h4>
+<p class ="mrg">Nonanticipativity:</br>
+A nonanticipativity constraint is a constraint that limits the
+choice of the decisions to the information that has been revealed so far
+<h3>Dynamic Programming</h3>
 
 <h2> Optimization Algorithms</h2>
 <p class ="mrg">Here we provide some helpful algorithms that come handy when dealing
@@ -219,6 +256,4 @@ with optimization under uncertainty.
   </code>
 </pre>
 
-
-</body>
 </html>
