@@ -1,121 +1,128 @@
-<!DOCTYPE html">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
 
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title>A Practical Guide to Optimization under Uncertainty</title>
-  <meta http-equiv="Content-Style-Type" content="text/css" />
-  <meta name="generator" content="pandoc" />
-  <meta name="author" content="M. Mohsen Moarefdoost" />
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>A Practical Guide to Optimization under Uncertainty</title>
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <meta name="generator" content="pandoc" />
+    <meta name="author" content="M. Mohsen Moarefdoost" />
     <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
-  <style type="text/css">code{white-space: pre;}</style>
-  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML-full" type="text/javascript"></script>
+    <style type="text/css">code{white-space: pre;}</style>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML-full" type="text/javascript"></script>
     <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
-  </script>
-  <script src="/theme/js/jquery-2.1.3.min.js"></script>
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+    <script src="/theme/js/jquery-2.1.3.min.js"></script>
 
 
 
 
-<script type="text/javascript">
-  WebFontConfig = {
-    google: { families: [ 'Lato::latin' ] }
-  };
-  (function() {
-    var wf = document.createElement('script');
-    wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
-    wf.type = 'text/javascript';
-    wf.async = 'true';
-    var s = document.getElementsByTagName('script')[0];
-    s.parentNode.insertBefore(wf, s);
-  })(); </script>
+    <script type="text/javascript">
+      WebFontConfig = {
+        google: { families: [ 'Lato::latin' ] }
+      };
+      (function() {
+        var wf = document.createElement('script');
+        wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+        wf.type = 'text/javascript';
+        wf.async = 'true';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(wf, s);
+      })();
+    </script>
 
     <style type="text/css">
 
         @import url(https://fonts.googleapis.com/css?family=Lato);
 
-body {
+        body {
 
-font-family: 'Lato', sans-serif !important;
-}
+        font-family: 'Lato', sans-serif !important;
+        }
 
-p.mrg{
-padding-top: 25px;
-padding-right: 110px;
-padding-bottom: 25px;
-padding-left: 110px;
-}
+        p.mrg{
+        padding-top: 25px;
+        padding-right: 110px;
+        padding-bottom: 25px;
+        padding-left: 110px;
+        }
 
-p.mrgEnd{
-padding-top: 10px;
-padding-right: 50px;
-padding-bottom: 30px;
-padding-left: 50px;
-}
+        p.mrgEnd{
+        padding-top: 10px;
+        padding-right: 50px;
+        padding-bottom: 30px;
+        padding-left: 50px;
+        }
 
-p.borderMrg{
-border: 1px solid red;
-background-color: yellow;
-padding-top: 50px;
-padding-right: 30px;
-padding-bottom: 50px;
-padding-left: 30px;
-}
+        p.borderMrg{
+        border: 1px solid red;
+        background-color: yellow;
+        padding-top: 50px;
+        padding-right: 30px;
+        padding-bottom: 50px;
+        padding-left: 30px;
+        }
 
-pre code {
-  background-color: #eee;
-  border: 1px solid #999;
-  display: block;
-margin-right: 110px;
-margin-left: 110px;
-}
+        pre code {
+          background-color: #eee;
+          border: 1px solid #999;
+          display: block;
+        margin-right: 110px;
+        margin-left: 110px;
+        }
 
-h1 {
-    display: block;
-    margin-top: 50px;
-    margin-bottom: 10px;
-    font-size:40px;
-    color: 0F0401
-}
+        h1 {
+            display: block;
+            margin-top: 50px;
+            margin-bottom: 10px;
+            font-size:40px;
+            color: 0F0401
+        }
 
-h2{
-text-indent: 75px;
-font-size:36px;
-color: 371309
-}
-h3{
-text-indent: 85px;
-font-size:28px;
-color: 371309
-}
+        h2{
+        text-indent: 75px;
+        font-size:36px;
+        color: 371309
+        }
+        h3{
+        text-indent: 85px;
+        font-size:28px;
+        color: 371309
+        }
 
-h4{
-text-indent: 95px;
-font-size:24px;
-color: 371309
-}
+        h4{
+        text-indent: 95px;
+        font-size:24px;
+        color: 371309
+        }
 
-h5{
-text-indent: 105px;
-font-size:20px;
-color: 371309
-}
+        h5{
+        text-indent: 105px;
+        font-size:20px;
+        color: 371309
+        }
 
 
-ol{
-padding-right: 110px;
-padding-left: 110px;
-}
+        ol{
+        padding-right: 110px;
+        padding-left: 110px;
+        }
 
-p{
-text-align: justify;
+        ul{
+        padding-right: 110px;
+        padding-left: 110px;
+        }
 
-}
-</style>
+        p{
+        text-align: justify;
+
+        }
+    </style>
 </head>
-
-<h1 align="center"; padding-top: 50px;>A Practical Guide to Optimization under Uncertainty</h1>
+<h1 align="center";>A Practical Guide to Optimization under Uncertainty</h1>
 <p class="mrg">
 Optimization under Uncertainty has lots of used cases in many real world
 and practical problems in the area of supply chain, transportation,
@@ -130,14 +137,14 @@ when we face some uncertainty. We give a simple practical example and show
 how one can formulate that problem in the presence of uncertainty, provide
 useful algorithms and present sample codes in Python for reference.
 </p>
-<h2> Prerequisites </h3>
+<h2> Prerequisites </h2>
 <p class="mrg">
 We assume a reader of this tutorial is familiar with basics Linear and Mixed Integer Programming,
 and knows what <em>Decision Variables</em>, <em>Constraints</em>, <em>Objective Function</em>,
 and <em>Non-negativity restriction</em> are.
 </p>
 
-<h2>Modeling Uncertainty</h4>
+<h2>Modeling Uncertainty</h2>
 <p class="mrg">
 Before explaining possible approaches one may take to solve an optimization problem under uncertainty,
 let us refresh your memory on deterministic LP/MIP problems.
@@ -159,35 +166,35 @@ A typical LP/MIP problem has a mathematical form like this:</p>
 
 
 <p class="mrg">
-Here, <span class="math inline">$c_1, c_2, \cdots, c_n$</span>
-are objective coefficient parameters,
-<span class="math inline">$a_{11}, a_{12}, \cdots, a_{nm}$</span> are constraints coefficient parameters,
-and <span class="math inline">$b_{1}, b_{2}, \cdots, b_{m}$</span>
-are right hand side parameters. Either of these parameters
-or all of them can be uncertain or random, and you may have their probability distribution, or not.
-Depending on which set is random, one might adopt different approach to model and solve the underlying problem.
+    Here, <span class="math inline">$c_1, c_2, \cdots, c_n$</span>
+    are objective coefficient parameters,
+    <span class="math inline">$a_{11}, a_{12}, \cdots, a_{nm}$</span> are constraints coefficient parameters,
+    and <span class="math inline">$b_{1}, b_{2}, \cdots, b_{m}$</span>
+    are right hand side parameters. Either of these parameters
+    or all of them can be uncertain or random, and you may have their probability distribution, or not.
+    Depending on which set is random, one might adopt different approach to model and solve the underlying problem.
 
-In general, there are two approaches to optimization under uncertainty:
-<ol>
-<ul>
-<li><b>Robust Optimization Models</b></li>
-In these types of models, one consider the worst possible outcome and optimize decisions based on that.
-As mentioned <a href="https://dspace.mit.edu/openaccess-disseminate/1721.1/66198">here</a>,
-in robust optimization the uncertainty is not stochastic, but rather deterministic and set-based.
-We are not covering robust optimization in this tutorial.
-There are plenty of good resources online that intersted readers may consult with.
-<li><b>Chance Constraint Models</b></li>
-In these types of models, one may care about risk and managing it,
-and use quantiles and variance to evaluate value-at-risk, expected shorfall, etc.,
-and make decisions to optimize them.
-<li><b>Recourse Models</b></li>
-In this approach generally you can take corrective actions when you observe the true value of an uncertain parameter.
+    In general, there are two approaches to optimization under uncertainty:</p>
     <ul>
-    <li>Two-Stage Models</li>
-    <li>Multi-Stage Models</li>
+        <li><b>Robust Optimization Models</b></li>
+        In these types of models, one consider the worst possible outcome and optimize decisions based on that.
+        As mentioned <a href="https://dspace.mit.edu/openaccess-disseminate/1721.1/66198">here</a>,
+        in robust optimization the uncertainty is not stochastic, but rather deterministic and set-based.
+        We are not covering robust optimization in this tutorial.
+        There are plenty of good resources online that intersted readers may consult with.
+        <li><b>Chance Constraint Models</b></li>
+        In these types of models, one may care about risk and managing it,
+        and use quantiles and variance to evaluate value-at-risk, expected shorfall, etc.,
+        and make decisions to optimize them.
+    <li><b>Recourse Models</b></li>
+        In this approach generally you can take corrective actions when you observe the true value of an uncertain parameter.
+        <ul>
+            <li>Two-Stage Models</li>
+            <li>Multi-Stage Models</li>
+        </ul>
+    <li><b>Dynamic Programming</b></li>
     </ul>
-<li><b>Dynamic Programming</b></li>
-</ol>
+
 <p class="mrg">
 In the following sections, we explain each of these methods in details using the following simple example.</br>
 Consider a production plant which produces <span class="math inline">$N$</span> products. This plant can either produce,
@@ -224,15 +231,17 @@ Here is the mathematical formulation:
 \end{array}
 \right.
 \]</div>
-<h3>Worst-Case and Chance Constraint Models</h3>
+
+<h3>Chance Constraint Models</h3>
 <p class ="mrg"> In this approach, we estimate or guess the highly possible outcome of random parameters,
 or optimize under certain confidence level.
+
 <h3>Recourse Models</h3>
-<h5>Two-stage Models</h4>
+<h5>Two-stage Models</h5>
 <h5>Multi-stage Models</h5>
 <p class ="mrg">Nonanticipativity:</br>
-A nonanticipativity constraint is a constraint that limits the
-choice of the decisions to the information that has been revealed so far
+    A nonanticipativity constraint is a constraint that limits the
+    choice of the decisions to the information that has been revealed so far</p>
 <h3>Dynamic Programming</h3>
 
 <h2> Optimization Algorithms</h2>
