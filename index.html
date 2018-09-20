@@ -327,7 +327,7 @@
             In this approach generally you can take corrective actions when you observe
             the true value of an uncertain parameter. These models are also known as stochastic programming models
             which include two main models: Two-Stage Models and Multi-Stage Models.
-            ul>
+            <ul>
                 <li>Two-Stage Models</li>
                 In two stage models, we have two types of decision variables. First stage decision variables
                 also known as <em>here-and-now</em> decisions are those the we make BEFORE a
@@ -347,6 +347,17 @@
             for interested readers.
             </ul>
             <li><b>Dynamic Programming</b></li>
+            In Dynamic programming (DP), the assumption is that we are
+            in some <font color="blue">State</font>, and based on the state we are in, we need to make a decision (<font color="blue">Action</font>),
+            then randomness happens, and this randomness with some probability (<font color="blue">Transition Probability</font>)
+            take us to another state and give us some reward based on our earlier decision. Now, we are in a new state
+            and we need to make a new decision and go on. You can see that our decision is a
+            function of state that we are in currently. This function that maps states to decisions is
+            called <em><font color="blue">Policy</font></em>,
+            and we want to find a policy that on average yields higher sums of rewards. Such policy is called
+            <em><font color="blue">Optimal Policy</font></em>.<br>
+            Optimal policy satsifies a set of equations known as <em><font color="blue">Bellman Equations</font></em>,
+            and DP is an algorithm that finds the optimal policy based on Bellman equations in discrete state-action spaces.
         </ol>
 
 
@@ -398,7 +409,7 @@
 
     <h2>Authors </h2>
 
-    <p class ="mrg">* **Mohsen Moarefdoost, Ph.D.** </p>
+    <p class ="mrg">Mohsen Moarefdoost, Ph.D. </p>
 
 
     <pre>
