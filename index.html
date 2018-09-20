@@ -325,14 +325,26 @@
 
             <li><b>Recourse Models</b></li>
             In this approach generally you can take corrective actions when you observe
-            the true value of an uncertain parameter.
-            <ul>
+            the true value of an uncertain parameter. These models are also known as stochastic programming models
+            which include two main models: Two-Stage Models and Multi-Stage Models.
+            ul>
                 <li>Two-Stage Models</li>
+                In two stage models, we have two types of decision variables. First stage decision variables
+                also known as <em>here-and-now</em> decisions are those the we make BEFORE a
+                realization of random parameters become known. And, second stage decisions are recourse decision
+                which we make AFTER a realization of random parameters become known.
                 <br><br>
                 <li>Multi-Stage Models</li>
-                    <p class ="mrg">Nonanticipativity:</br>
-        A nonanticipativity constraint is a constraint that limits the
-        choice of the decisions to the information that has been revealed so far</p>
+                Multi-Stage models are those that we need to make recourse and corrective decisions
+                at successive stages because the information is being known at every stage we move forward.
+            A good example is when we are planning for multiple time periods and each time period
+            we only have access to past information. Therefore, in these models we need to be careful to satisfy
+            nonanticipativity constraint which is a constraint that limits the  choice of the decisions
+            to the information that has been revealed so far. We found
+            <a href="https://www2.isye.gatech.edu/people/faculty/Alex_Shapiro/SPbook.pdf">Lectures on Stochastic Programming by Shapiro et. al</a>
+            and
+            <a href="http://homepages.cae.wisc.edu/~linderot/classes/ie495/index.html">these course materials by Jeff Linderoth</a> very useful
+            for interested readers.
             </ul>
             <li><b>Dynamic Programming</b></li>
         </ol>
