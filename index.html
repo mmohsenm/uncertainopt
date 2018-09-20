@@ -109,16 +109,18 @@
         ol{
         padding-right: 110px;
         padding-left: 110px;
+        LINE-HEIGHT:25px
         }
 
         ul{
         padding-top: 10px;
         padding-right: 110px;
         padding-left: 110px;
+        LINE-HEIGHT:25px;
         }
 
         p{
-        text-align: justify;
+        text-align: justify;LINE-HEIGHT:25px
 
         }
     </style>
@@ -128,15 +130,15 @@
     <p class="mrg">
     Optimization under Uncertainty has lots of used cases in many real world
     and practical problems in the area of supply chain, transportation,
-    retail and finance. However, current available resources provide limited
+    retail and finance, etc. However, current available resources provide limited
     help to industry practitioners.<br />
     If you look at some online resources on Two-stage Stochastic Programming,
     Dynamic Programming and Robust Optimization, you see they get too technical
     too soon which puts a burden on their applicability.
     In this guide, we are providing a simple tutorial on how to
     solve optimization problems (mainly linear and mixed integer linear programming)
-    when we face some uncertainty. We give a simple practical example and show
-    how one can formulate that problem in the presence of uncertainty, provide
+    when we face some uncertainty. We give a simple practical example and show a practical way of
+    formulating that problem in the presence of uncertainty, provide
     useful algorithms and present sample codes in Python for reference.
     </p>
     <h2> Prerequisites </h2>
@@ -149,7 +151,7 @@
     <h2>Modeling Uncertainty</h2>
     <p class="mrg">
     Before explaining possible approaches one may take to solve an optimization problem under uncertainty,
-    let us refresh your memory on deterministic LP/MIP problems.
+    let us refresh our memory on deterministic LP/MIP problems.
     A typical LP/MIP problem has a mathematical form like this:</p>
 
     <div style="left;" class="math display">
@@ -177,7 +179,7 @@
         Depending on which set is random, one might adopt different approach to model and solve the underlying problem.
 
         In general, there are four approaches to optimization under uncertainty:</p>
-        <ul>
+        <ol>
             <li><b>Robust Optimization Models</b></li>
             In these types of models, one consider the worst possible outcome and optimize decisions based on that.
             As mentioned <a href="https://dspace.mit.edu/openaccess-disseminate/1721.1/66198">here</a>,
@@ -188,14 +190,67 @@
             <br>
             <li><b>Deterministic Equivalent Models</b></li>
             In these types of models, we replace the problem with uncertain parameters
-            with a deterministic equivalent formulation. There are three common methods to obtain
+            with a deterministic equivalent formulation. These models are generally easy to understand
+            and some of them are practical. There are three common methods to obtain
             the deterministic equivalence model:
             <ul>
                 <li><b>Estimate method</b></li>
                 This is the simplest approach to deal with uncertain parameters in a mathematical optimization problem
                 where we set a deterministic value for each uncertain parameter such as their mean or
-                their quantile estimation.
+                their quantile estimation, depending on business requirements. For example, assume that
+                a minimization objective
+                function like <span class="math inline">$$\textbf{min}\ c_1x_1+\cdots+c_nx_n$$</span>
+                has uncertain coefficients, and <span class="math inline">$c_1, c_2, \cdots, c_n$</span> are normal iid
+                random variables
+                with mean  <span class="math inline">$\mu_i, i=1,2,\cdots,n$</span>,
+                and standard deviation <span class="math inline">$\sigma_{i}, i=1,2,\cdots,n$</span>.
+                Here, one can ignore variability and replace uncertain objective function
+                with <span class="math inline">$$\textbf{min}\ \mu_1x_1+\cdots+\mu_nx_n.$$</span>
+                Or, one might be interested in minimizing when uncertain parameters are at 95%-quantile
+                (maximizing 5%-quantile when objective function is maximization)
+                which leads to <span class="math inline">$$\textbf{min}\ (\mu_1+\mathcal{z}_{0.95}\sigma_1)x_1+
+                \cdots+(\mu_n+\mathcal{z}_{0.95}\sigma_n)x_n.$$</span>
+
+                Note that this minimizing quantile value problem becomes nonlinear when <span class="math inline">$c_1, c_2, \cdots, c_n$</span>
+                are NOT iid random variables. Assume that <span class="math inline">$c_1, c_2, \cdots, c_n$</span>
+                have the multivariate normal distribution with mean vector <span class="math inline">$\mu=[\mu_i], i=1,2,\cdots,n$</span>,
+                and covariance matrix <span class="math inline">$\Sigma=[\sigma_{ij}], i,j=1,2,\cdots,n$</span>. Therefore,
+                the above objective function will be normally distributed with mean
+                <span class="math inline">$\mu_1x_1+\cdots+\mu_nx_n$</span> and
+                variance <span class="math inline">$\sum_{i=1}^{n}{\sigma_{ii}x^2_i}+2\sum_{i=1}^{n}\sum_{j=i+1}^{n}{\sigma_{ij}x_ix_j}$</span>.
+                Then, objective function for minimizing 95%-quantile is
+                <span class="math inline">$$\textbf{min}\ \mu_1x_1+\cdots+\mu_nx_n +
+                \mathcal{z}_{0.95} \sqrt{\sum_{i=1}^{n}{\sigma_{ii}x^2_i}+2\sum_{i=1}^{n}
+                    \sum_{j=i+1}^{n}{\sigma_{ij}x_ix_j}},$$</span>
+                which is not linear anymore.
+                This <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.534.3911&rep=rep1&type=pdf">reference</a>
+                provides more technical details of how one can solve this optimization problem.
                 <br><br>
+                The above reformulation is for cases where objective function is uncertain.
+                However, there are many problems in practice that we have uncertainty in constraints.
+                Here, we explain how to deal with inequality constraints. For equality constraint,
+                this method does not produce meaningful deterministic formulation.
+                <em>Expected violation penalty method</em> which we explain later is a better
+                choice when we have uncertainty in equality constraints. Now, assume an inequality constraint like
+                <span class="math inline">$$a_1x_1+\cdots+a_nx_n \leq b$$</span>
+                has uncertain coefficients, and <span class="math inline">$a_1, a_2, \cdots, a_n$</span> are normal iid
+                random variables
+                with mean  <span class="math inline">$\mu_i, i=1,2,\cdots,n$</span>,
+                and standard deviation <span class="math inline">$\sigma_{i}, i=1,2,\cdots,n$</span>.
+                Again, one may ignore variability and replace uncertain parameters with their mean and get
+                with <span class="math inline">$$\mu_1x_1+\cdots+\mu_nx_n \leq b.$$</span>
+                Or, one might be interested in cases where this constraint is satisfied
+                when uncertain parameters are at 95%-quantile
+                (5%-quantile for <span class="math inline">$\geq$</span> inequality sign.)
+                which leads to <span class="math inline">$$ (\mu_1+\mathcal{z}_{0.95}\sigma_1)x_1+
+                \cdots+(\mu_n+\mathcal{z}_{0.95}\sigma_n)x_n\leq b.$$</span>
+                Same as what we observe for uncertain objective function where <span class="math inline">$a_1, a_2, \cdots, a_n$</span>
+                are NOT iid random variables, the formulation is different. In the next section,
+                <em>Chance constraint optimization</em>, we explain how to deal with such cases.
+                <br><br>
+                <li><b>Chance constraint optimization</b></li>
+                In this approach, we estimate or guess the highly possible outcome of random parameters,
+                or optimize under certain confidence level. <br><br>
                 <li><b>Expected violation penalty method</b></li>
                 This method is well suited for problems where uncertainty is present in constraints.
                 In the case of uncertain constraints, we are interested in containing or minimizing their violations
@@ -265,9 +320,7 @@
                 </div>
                 This approximation increases the size of problem but preserves the linearity.
                 <br><br>
-                <li><b>Chance constraint optimization</b></li>
-                In this approach, we estimate or guess the highly possible outcome of random parameters,
-    or optimize under certain confidence level.<br><br>
+
             </ul>
 
             <li><b>Recourse Models</b></li>
@@ -282,7 +335,7 @@
         choice of the decisions to the information that has been revealed so far</p>
             </ul>
             <li><b>Dynamic Programming</b></li>
-        </ul>
+        </ol>
 
 
 
