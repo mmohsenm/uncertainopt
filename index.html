@@ -159,9 +159,9 @@
     \left. \begin{array}{lll}
     \text{min}& c_1x_1+c_2x_2+\cdots+c_nx_n&\\
     \text{s.t.}\\
-    &a_{11}x_{11}+a_{12}x_{12}+\cdots+x_{1n}x_{1n}&\leq b_1\\
+    &a_{11}x_{1}+a_{21}x_{2}+\cdots+x_{n1}x_{n}&\leq b_1\\
     &\vdots&\vdots\\
-    &a_{m1}x_{m1}+a_{m2}x_{m2}+\cdots+x_{mn}x_{mn}&\leq b_m\\
+    &a_{1m}x_{1}+a_{2m}x_{2}+\cdots+x_{mn}x_{n}&\leq b_m\\
     &x_1, x_2, \cdots, x_n \geq 0&\\
     &\text{Some}\ x_i\text{s are Integer}
     \end{array}
@@ -181,11 +181,65 @@
         In general, there are four approaches to optimization under uncertainty:</p>
         <ol>
             <li><b>Robust Optimization Models</b></li>
-            In these types of models, one consider the worst possible outcome and optimize decisions based on that.
+            In these types of models, one consider the worst possible outcome and
+            optimize decisions based on that. Finding the worst possible outcome is itself an optimization problem
+            which is called the subproblem and must be solved.
             As mentioned <a href="https://dspace.mit.edu/openaccess-disseminate/1721.1/66198">here</a>,
             in robust optimization the uncertainty is not stochastic, but rather deterministic and set-based.
-            We are not covering robust optimization in this tutorial.
-            There are plenty of good resources online that interested readers may consult with.
+            For example, assume that in the above optimization problem constraints coefficient parameters belong
+            to an uncertainty set as:
+                <div style="left;" class="math display">
+                \[
+                l_{ij}\leq a_{ij} \leq u_{ij}\quad  i=1,2,\cdots,n,\quad j=1,2,\cdots,m
+                \]</div>
+            then, for <span class="math inline">$j=1,2,\cdots,m$</span> we have subproblem as:
+            <div style="left;" class="math display">
+            \[
+            \left. \begin{array}{lll}
+            \text{max}& \sum_{i=1}^{n}a_{ij}x_i&\\
+            \text{s.t.}\\
+            &\ a_{ij}\leq u_{ij}& i=1,2,\cdots,n\\
+            &-a_{ij}\leq -l_{ij}& i=1,2,\cdots,n,
+            \end{array}
+            \right.
+            \]</div>
+            and we want <span class="math inline">$\{\text{max}\ \sum_{i=1}^{n}a_{ij}x_i\}\leq b_j$</span>.
+            Note that in this subproblem <span class="math inline">$a_{ij}$s</span> are decision variables not
+            <span class="math inline">$x_{i}$s</span>. If we write the dual of this subproblem, we get:
+            <div style="left;" class="math display">
+            \[
+            \left. \begin{array}{lll}
+            \text{min}& \sum_{i=1}^{n}\lambda_{ij}u_{ij}-\sum_{i=1}^{n}\mu_{ij}l_{ij}&\\
+            \text{s.t.}\\
+            &x_{i} = \lambda_{ij} - \mu_{ij} & i=1,2,\cdots,n\\
+            &\lambda_{ij}\geq 0,\ \mu_{ij}\geq0& i=1,2,\cdots,n,
+            \end{array}
+            \right.
+            \]</div>
+            Notice that the objective function in the dual subproblem is independent of
+            <span class="math inline">$x_{i}$s</span> which is good and based on the strong duality t
+            hat always holds for linear programs we can use
+            <span class="math inline">$\{\text{min}\ \sum_{i=1}^{n}\lambda_{ij}u_{ij}-\sum_{i=1}^{n}\mu_{ij}l_{ij}\}\leq b_j$</span>,
+            instead of
+            <span class="math inline">$\{\text{max}\ \sum_{i=1}^{n}a_{ij}x_i\}\leq b_j$</span>.
+            Therefore, we can write the best-worst (robust) version of
+            the original optimization problem as:
+                <div style="left;" class="math display">
+                \[
+                \left. \begin{array}{lll}
+                \text{min}& \sum_{i=1}^{n}{c_ix_i}&\\
+                \text{s.t.}\\
+                &\sum_{i=1}^{n}{a_{ij}x_i}\leq b_j&j=1,2,\cdots, m\\
+                &\sum_{i=1}^{n}{u_{ij}\lambda_{ij}}-\sum_{i=1}^{n}{l_{ij}\mu_{ij}}\leq b_j&j=1,2,\cdots, m\\
+                &x_{i}-\lambda_{ij}+\mu_{ij} = 0&i=1,2,\cdots, n\quad j=1,2,\cdots, m\\
+                &x_{i}\geq 0 & i=1,2,\cdots, n\quad j=1,2,\cdots, m\\
+                &\lambda_{ij}\geq 0,\ \mu_{ij}\geq0& i=1,2,\cdots, n\quad j=1,2,\cdots, m\\
+                &\text{Some}\ x_i\text{s are Integer}
+                \end{array}
+                \right.
+                \]</div>
+            This problem is larger in size and its size grows polynomially in the dimensions of the uncertainty set.
+            We won't go much into details here in this tutorial. There are plenty of good resources online that interested readers may consult with.
             <br>
             <br>
             <li><b>Deterministic Equivalent Models</b></li>
