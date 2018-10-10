@@ -44,7 +44,7 @@
         }
 
         p.mrg{
-        padding-top: 25px;
+        padding-top: 0px;
         padding-right: 110px;
         padding-bottom: 25px;
         padding-left: 110px;
@@ -52,9 +52,9 @@
 
         p.mrgEnd{
         padding-top: 10px;
-        padding-right: 50px;
-        padding-bottom: 30px;
-        padding-left: 50px;
+        padding-right: 110px;
+        padding-bottom: 10px;
+        padding-left: 110px;
         }
 
         p.borderMrg{
@@ -72,6 +72,8 @@
           display: block;
         margin-right: 110px;
         margin-left: 110px;
+        margin-top: 0px;
+        margin-bottom: 0px;
         }
 
         h1 {
@@ -85,24 +87,36 @@
         h2{
         text-indent: 75px;
         font-size:36px;
+        margin-bottom: 10px;
         color: 371309
         }
         h3{
         text-indent: 85px;
         font-size:28px;
+        margin-bottom: 10px;
         color: 371309
         }
 
         h4{
         text-indent: 95px;
         font-size:24px;
+        margin-bottom: 10px;
         color: 371309
         }
 
         h5{
         text-indent: 105px;
         font-size:20px;
+        margin-bottom: 10px;
         color: 371309
+        }
+
+        h6{
+        display: block;
+            margin-top: 0px;
+            margin-bottom: 10px;
+            font-size:18px;
+            color: 0F0401
         }
 
 
@@ -125,27 +139,28 @@
         }
     </style>
 </head>
-<font color="red"; size="20pt">Note: This document is a work in progress and not complete</font>
-    <h1 align="center";>A Practical Guide to Optimization under Uncertainty</h1>
+    <h1 align="center";>A Practical Guide to Optimization under Uncertainty
+    </h1>
+<h6 align="center";>by
+    <a href="https://www.linkedin.com/in/mohsenmdst/">Mohsen Moarefdoost, Ph.D.</a>
+</h6>
     <p class="mrg">
-    Optimization under Uncertainty has lots of used cases in many real world
+    Optimization under Uncertainty has lots of use cases in many real world
     and practical problems in the area of supply chain, transportation,
-    retail and finance, etc. However, current available resources provide limited
-    help to industry practitioners.<br />
+    retail, finance, etc. However, current available resources provide limited
+    help to industry practitioners.
     If you look at some online resources on Two-stage Stochastic Programming,
     Dynamic Programming and Robust Optimization, you see they get too technical
     too soon which puts a burden on their applicability.
     In this guide, we are providing a simple tutorial on how to
     solve optimization problems (mainly linear and mixed integer linear programming)
-    when we face some uncertainty. We give a simple practical example and show a practical way of
-    formulating that problem in the presence of uncertainty, provide
-    useful algorithms and present sample codes in Python for reference.
+    when we face some uncertainty. We also give a simple practical example along with sample codes in Python for reference.
     </p>
     <h2> Prerequisites </h2>
     <p class="mrg">
-    We assume a reader of this tutorial is familiar with basics Linear and Mixed Integer Programming,
+    We assume a reader of this tutorial is familiar with basics of Linear and Mixed Integer Programming,
     and knows what <em>Decision Variables</em>, <em>Constraints</em>, <em>Objective Function</em>,
-    and <em>Non-negativity restriction</em> are.
+    and <em>Non-negativity restrictions</em> are.
     </p>
 
     <h2>Modeling Uncertainty</h2>
@@ -178,21 +193,21 @@
         or all of them can be uncertain or random, and you may have their probability distribution, or not.
         Depending on which set is random, one might adopt different approach to model and solve the underlying problem.
 
-        In general, there are four approaches to optimization under uncertainty:</p>
+        In general, there are four common approaches to optimization under uncertainty:</p>
         <ol>
             <li><b>Robust Optimization Models</b></li>
-            In these types of models, one consider the worst possible outcome and
-            optimize decisions based on that. Finding the worst possible outcome is itself an optimization problem
+            In these models, one considers the worst possible outcome and
+            optimizes decisions based on that. Finding the worst possible outcome is itself an optimization problem
             which is called the subproblem and must be solved.
             As mentioned <a href="https://dspace.mit.edu/openaccess-disseminate/1721.1/66198">here</a>,
-            in robust optimization the uncertainty is not stochastic, but rather deterministic and set-based.
-            For example, assume that in the above optimization problem constraints coefficient parameters belong
-            to an uncertainty set as:
+            in robust optimization, the uncertainty is not stochastic, but rather deterministic and set-based.
+            For example, assume that in the above optimization problem, constraint coefficients belong
+            to an uncertainty set like:
                 <div style="left;" class="math display">
                 \[
                 l_{ij}\leq a_{ij} \leq u_{ij}\quad  i=1,2,\cdots,n,\quad j=1,2,\cdots,m
                 \]</div>
-            then, for <span class="math inline">$j=1,2,\cdots,m$</span> we have subproblem as:
+            then, for <span class="math inline">$j=1,2,\cdots,m,$</span> we have a subproblem as:
             <div style="left;" class="math display">
             \[
             \left. \begin{array}{lll}
@@ -203,7 +218,8 @@
             \end{array}
             \right.
             \]</div>
-            and we want <span class="math inline">$\{\text{max}\ \sum_{i=1}^{n}a_{ij}x_i\}\leq b_j$</span>.
+            and we want <span class="math inline">$\{\text{max}\ \sum_{i=1}^{n}a_{ij}x_i\}\leq b_j$</span> (since the constraint
+            is a "<span class="math inline">$\leq$</span>" constraint).
             Note that in this subproblem <span class="math inline">$a_{ij}$s</span> are decision variables not
             <span class="math inline">$x_{i}$s</span>. If we write the dual of this subproblem, we get:
             <div style="left;" class="math display">
@@ -217,8 +233,7 @@
             \right.
             \]</div>
             Notice that the objective function in the dual subproblem is independent of
-            <span class="math inline">$x_{i}$s</span> which is good and based on the strong duality t
-            hat always holds for linear programs we can use
+            <span class="math inline">$x_{i}$s</span>, and based on the strong duality that always holds for linear programs we can use
             <span class="math inline">$\{\text{min}\ \sum_{i=1}^{n}\lambda_{ij}u_{ij}-\sum_{i=1}^{n}\mu_{ij}l_{ij}\}\leq b_j$</span>,
             instead of
             <span class="math inline">$\{\text{max}\ \sum_{i=1}^{n}a_{ij}x_i\}\leq b_j$</span>.
@@ -239,15 +254,15 @@
                 \right.
                 \]</div>
             This problem is larger in size and its size grows polynomially in the dimensions of the uncertainty set.
-            We won't go much into details here in this tutorial. There are plenty of good resources online that interested readers may consult with.
+            We won't go much into details in this tutorial. There are plenty of good resources online that interested readers may consult with.
             <br>
             <br>
             <li><b>Deterministic Equivalent Models</b></li>
-            In these types of models, we replace the problem with uncertain parameters
+            In these models, we replace the problem with uncertain parameters
             with a deterministic equivalent formulation. These models are generally easy to understand
             and some of them are practical. There are three common methods to obtain
-            the deterministic equivalence model:
-            <ul>
+            a deterministic equivalent model:
+            <br>
                 <li><b>Estimate method</b></li>
                 This is the simplest approach to deal with uncertain parameters in a mathematical optimization problem
                 where we set a deterministic value for each uncertain parameter such as their mean or
@@ -265,9 +280,11 @@
                 which leads to <span class="math inline">$$\textbf{min}\ (\mu_1+\mathcal{z}_{0.95}\sigma_1)x_1+
                 \cdots+(\mu_n+\mathcal{z}_{0.95}\sigma_n)x_n.$$</span>
 
-                Note that this minimizing quantile value problem becomes nonlinear when <span class="math inline">$c_1, c_2, \cdots, c_n$</span>
-                are NOT iid random variables. Assume that <span class="math inline">$c_1, c_2, \cdots, c_n$</span>
-                have the multivariate normal distribution with mean vector <span class="math inline">$\mu=[\mu_i], i=1,2,\cdots,n$</span>,
+                Note that in the above formulation, we consider 95%-quantile values for each coefficient individually.
+                One may want to minimize 95%-quantile of the objective function instead. This makes the problem nonlinear.
+            <br></br>
+                Assume that <span class="math inline">$c_1, c_2, \cdots, c_n$</span>
+                have a multivariate normal distribution with mean vector <span class="math inline">$\mu=[\mu_i], i=1,2,\cdots,n$</span>,
                 and covariance matrix <span class="math inline">$\Sigma=[\sigma_{ij}], i,j=1,2,\cdots,n$</span>. Therefore,
                 the above objective function will be normally distributed with mean
                 <span class="math inline">$\mu_1x_1+\cdots+\mu_nx_n$</span> and
@@ -298,13 +315,49 @@
                 (5%-quantile for <span class="math inline">$\geq$</span> inequality sign.)
                 which leads to <span class="math inline">$$ (\mu_1+\mathcal{z}_{0.95}\sigma_1)x_1+
                 \cdots+(\mu_n+\mathcal{z}_{0.95}\sigma_n)x_n\leq b.$$</span>
-                Same as what we observe for uncertain objective function where <span class="math inline">$a_1, a_2, \cdots, a_n$</span>
-                are NOT iid random variables, the formulation is different. In the next section,
-                <em>Chance constraint optimization</em>, we explain how to deal with such cases.
+                Same as what we observe for uncertain objective function where we are interested in 95%-quantile of the constraint,
+            the formulation is different. In the next section (<em>Chance constraint optimization</em>) we explain how to deal with such cases.
                 <br><br>
                 <li><b>Chance constraint optimization</b></li>
-                In this approach, we estimate or guess the highly possible outcome of random parameters,
-                or optimize under certain confidence level. <br><br>
+                In this approach, we estimate or guess the highly possible outcome of random parameters.
+                Our goal is to find an optimal solution while allowing a subset of the constraints to be violated
+                at an acceptable confidence level, or achieving an acceptable level of reliability. For an inequality constraint like
+                <span class="math inline">$$a_1x_1+\cdots+a_nx_n \leq b$$</span> we want the following equation holds:
+                <span class="math inline">$$Pr\{a_1x_1+\cdots+a_nx_n \leq b\}\geq 1-\epsilon.$$</span>
+                We need to translate this probability constraint into its deterministic equivalent.
+                If we know probability distribution of the parameter values (<span class="math inline">$a_1, a_2, \cdots, a_n$</span>),
+                we can write the deterministic formulation, however, the deterministic formulation is not always convex.
+                It is convex if the probability distribution of the parameters is symmetric (like normal distribution),
+                or positively skewed (like exponential distribution). Lets assume that
+                <span class="math inline">$a_1, a_2, \cdots, a_n$</span> are normal random variables,
+                and <span class="math inline">$E(a_i)=\mu_i, i\in \{1,2, \cdots, n\}$</span>,
+                <span class="math inline">$Var(a_i)=\sigma_{ii}, i\in \{1,2, \cdots, n\}$</span>, and
+                <span class="math inline">$Cov(a_i, a_j)=\sigma_{i,j}, i \neq j\in \{1,2, \cdots, n\}$</span>.
+                Then, the deterministic equivalent of
+                <span class="math inline">$$Pr\{a_1x_1+\cdots+a_nx_n \leq b\}\geq 1-\epsilon,$$</span> is
+                <span class="math inline">$$\sum_{i=1}^{n}{\mu_ix_i}+\Phi^{-1}(1-\epsilon)\sqrt{\sum_{i=1}^{n}\sum_{j=1}^{n}{x_ix_j\sigma_{ij}}} \leq b.$$</span>
+                As you can see, this constraint is not linear anymore (it is SOCP). You can see even with the simplest assumption,
+                the resulting formulation is hard. Another way is to use MIP-approximation to obtain a deterministic formulation for
+                that probability constraint. Assume that you don't know the probability distribution of
+                the parameter values (<span class="math inline">$a_1, a_2, \cdots, a_n$</span>),
+                but you can sample large enough scenarios. Assume that we have <span class="math inline">$K$</span> scenarios
+                and <span class="math inline">$a_i = a^k_i, i\in \{1,2,\cdots,n\}, k\in\{1,2,\cdots,K\}$</span>
+                with probability <span class="math inline">$\pi_k, k\in\{1,2,\cdots,K\}.$</span> Thus, the deterministic equivalent formulation is
+                <div style="left;" class="math display">
+                \[
+                \left. \begin{array}{lll}
+                \sum_{i=1}^{n}{a_i^kx_i} - \textbf{M} z_k\leq b & k=1,2,\cdots,K\\
+                \sum_{k=1}^{K}{\pi_kz_k}\leq \epsilon&\\
+                z_k\in\{0,1\}&k=1,2,\cdots,K
+                \end{array}
+                \right.
+                \]</div>
+                Here, <b>M</b> is a big number, and each binary variable takes the value of 0 if the corresponding constraint is satisfied, and 1 otherwise.
+                Also,
+                <span class="math inline">$\sum_{k=1}^{K}{\pi_kz_k}\leq \epsilon$</span> is a knapsack constraint to ensure that
+                <span class="math inline">$Pr\{a_1x_1+\cdots+a_nx_n \leq b\}\geq 1-\epsilon$</span> is satisfied.
+
+                <br><br>
                 <li><b>Expected violation penalty method</b></li>
                 This method is well suited for problems where uncertainty is present in constraints.
                 In the case of uncertain constraints, we are interested in containing or minimizing their violations
@@ -332,8 +385,8 @@
                         \]
                     </div>
                 Here we need to find analytical form of <span class="math inline">$E[\delta]$</span>.
-                But it is usually a difficult task and in some cases impossible,
-                also there is no guarantee of linearity even if you can find the right analytical form.
+                But it is usually a difficult task and in some cases impossible.
+                Also there is no guarantee of linearity even if you can find the right analytical form.
                 Lets explain it with a simple example where we are dealing with an
                 inequality constraint with uncertain right hand side, i.e.,
                 we have <span class="math inline">$a_1x_1+\cdots+a_nx_n \leq b$</span>
@@ -384,7 +437,7 @@
             <ul>
                 <li>Two-Stage Models</li>
                 In two stage models, we have two types of decision variables. First stage decision variables
-                also known as <em>here-and-now</em> decisions are those the we make BEFORE a
+                also known as <em>here-and-now</em> decisions are those that we make BEFORE a
                 realization of random parameters become known. And, second stage decisions are recourse decision
                 which we make AFTER a realization of random parameters become known.
                 <br><br>
@@ -418,62 +471,106 @@
 
     <h3>A Simple Example</h3>
     <p class="mrg">
-    To show different ways of dealing with uncertainty, we explain each of the above mentioned
-        methods in details using the following simple example.</br>
-    Consider a production plant which produces <span class="math inline">$N$</span> products. This plant can either produce,
-    or source this product to satisfy customers' monthly demand
-    <span class="math inline">$D_{nt}, \ t=1,2,\cdots,12, n=1,2,\cdots,N$</span> for a year.
-    The unit production and sourcing costs are <span class="math inline">$c^p_{n}, \ n=1,2,\cdots,N$</span> and
-    <span class="math inline">$c^s_{n}, \  n=1,2,\cdots,N$</span>, respectively.
-    In case of over production
-    in month <span class="math inline">$t$</span> , it can hold inventory at cost
-    <span class="math inline">$c^h_{n}, \  n=1,2,\cdots,N$</span>.
-    This plant has an efficiency rate of <span class="math inline">$r_{n}\leq 1, \ n=1,2,\cdots,N$</span>.
+    Here, we provide a simple numerical example to demonstrate what we have discussed so far. However,
+        for the sake of simplicity, we just implement <em>Expected violation penalty method.</em>
+        All input data can be found in <b><font color="green">/code/data</font></b> directory <a href="https://github.com/mmohsenm/uncertainopt">in this github repository</a>.</br>
+    Consider a production plant which produces <span class="math inline">$N$</span> products (<span class="math inline">$n=1,2,\cdots,N$</span>).
+        This plant can either produce,
+    or source products to satisfy customers' monthly demand (
+    <span class="math inline">$D_{nt}, \ t=1,2,\cdots,12$</span>) for a year, and Demand is not known ahead of decision making.
+        The production cost for product <span class="math inline">$n$</span> is
+        <span class="math inline">$c_n.$</span>
+        This plant sells each
+        product at price <span class="math inline">$p_{n}\geq c_{n}.$</span> In the case of shortage,
+        this plant needs to source at a higher price <span class="math inline">$p^H_{n},$</span> and
+        in the case of overage it has to sell at lower price
+    <span class="math inline">$p^L_{n}\leq c_n.$</span>
+    This plant has an efficiency rate of <span class="math inline">$r_{n}\leq 1$</span>.
     Total production capacity in each month depends on the availability of raw material.
-    <span class="math inline">$C_{t}, \ t=1,2,\cdots,12$</span> is the total monthly capacity in units.
-    We are looking for the best set of sourcing and production decisions that minimizes total sourcing, holding and production costs.
-    Let <span class="math inline">$X_{t}, \ t=1,2,\cdots,12$</span> and
-    <span class="math inline">$S_{t}, \ t=1,2,\cdots,12$</span>
-     be decision variables representing
-    monthly production and sourcing amount, respectivly. In addition,
-    we define <span class="math inline">$I_{nt}, \ t=1,2,\cdots,12$</span> as inventory level in month
-    <span class="math inline">$t$</span> for product <span class="math inline">$n$</span>
-    where <span class="math inline">$I_{n0}=\bar{I}_{n}$</span> is the starting inventory
-    for product <span class="math inline">$n$</span>.
+    <span class="math inline">$L_{t}$</span> is the total monthly capacity in units.
+    We are looking for the best set of sourcing and production decisions that maximizes total profit.
+    Let <span class="math inline">$X_{nt}$</span>,
+    <span class="math inline">$U_{nt}$</span>, and <span class="math inline">$O_{nt}$</span>
+     be production, shortage and overage amounts for product <span class="math inline">$n$</span>
+        at month <span class="math inline">$t$</span>, respectively.
     Here is the mathematical formulation:
     </p>
     <div style="left;" class="math display">
     \[
     \left. \begin{array}{lll}
-    \text{min}& \sum_{n=1}^{N}\sum_{t=1}^{12}{c^p_{n}X_{nt}+c^s_{n}S_{nt}+c^h_{n}I_{nt}}&\\
+    \text{max}& \sum_{n=1}^{N}\sum_{t=1}^{12}{(p_{n}-c_n)X_{nt}+(p^L_n-c_n)O_{nt}-p^H_nU_{nt}}&\\
     \text{s.t.}\\
-    &\sum_{n=1}^{N}{r_{n}x_{nt}}\leq C_{t}&\forall t\\
-    &I_{nt-1}+S_{nt} + X_{nt} - I_{nt}= D_{nt}&\forall t\quad \forall n\\
-    &S_{nt}, X_{nt}, I_{nt} \geq 0&\forall t\quad \forall n\\
-    &I_{n0}=\bar{I}_{n}&\forall n
+    &\sum_{n=1}^{N}{r_{n}x_{nt}}\leq L_{t}&\forall t\\
+    &X_{nt}+U_{nt} - O_{nt}= D_{nt}&\forall t\quad \forall n\\
+    &O_{nt}, X_{nt}, U_{nt} \geq 0&\forall t\quad \forall n\\
     \end{array}
     \right.
     \]</div>
-
-    <h2> Optimization Algorithms</h2>
-    <p class ="mrg">Here we provide some helpful algorithms that come handy when dealing
-    with optimization under uncertainty.
-    <h3>Bender’s Decomposition </h3>
-    <h3>Lagrangian Relaxation </h3>
-
-    <h2>Authors </h2>
-
-    <p class ="mrg">Mohsen Moarefdoost, Ph.D. </p>
-
-
+    <p class="mrg">
+        This problem is simple and it is worth mentioning that it is a version of <b><em>News Vendor</em></b> problem.
+    If we want to use stochastic programming to solve this problem, we need to use Two-Stage model where
+    <span class="math inline">$X_{nt}s$</span> are first stage (here-and-now) decision variables, and <span class="math inline">$O_{nt}s$</span>
+    and <span class="math inline">$U_{nt}s$</span> are second stage (recourse) decision variables. Also, note that if we can hold inventory
+    and use it to buffer against uncertainty, we have to either use Dynamic programming or Multi-Stage stochastic programming.
+    However, assume that we are given a set of possible scenarios with their respective probabilities on what value
+    demand of product <span class="math inline">$n$</span> at month <span class="math inline">$t$</span> might take.
+    This means given scenario <span class="math inline">$k=1,2,\cdots, K$</span>, we have demand value
+    <span class="math inline">$d^k_{nt}$</span> with probability <span class="math inline">$\pi_k$</span>
+    for product <span class="math inline">$n$</span> at month <span class="math inline">$t$</span>. Therefore,
+        we can write the deterministic equivalent of the above optimization problem as:
+    </p>
+            <div style="left;" class="math display">
+            \[
+            \left. \begin{array}{lll}
+            \text{max}& \sum_{n=1}^{N}\sum_{t=1}^{12}{[(p_{n}-c_n)X_{nt}+\sum_{k=1}^{K}{\pi_k((p^L_n-c_n)O^k_{nt}-p^H_nU^n_{nt}})]}&\\
+            \text{s.t.}\\
+            &\sum_{n=1}^{N}{r_{n}x_{nt}}\leq L_{t}&\forall t\\
+            &O^k_{nt}\geq X_{nt} - d^k_{nt}&\forall t\quad \forall n \quad \forall k\\
+            &U^k_{nt}\geq d^k_{nt} - X_{nt}&\forall t\quad \forall n \quad \forall k\\
+            &O^k_{nt}, X_{nt}, U^k_{nt} \geq 0&\forall t\quad \forall n \quad \forall k\\
+            \end{array}
+            \right.
+            \]</div>
+    <p class="mrg">
+        We use <b>PuLp</b> to model and solve a numerical instance of this problem.
+        Please refer to <b><font color="green">/code</font></b> directory <a href="https://github.com/mmohsenm/uncertainopt">here</a> for more details.
+        In this directory, there are two Python files: <code><font color="green">optimization.py</font> </code> and
+        <code><font color="green">run_analysis.py</font> </code>.
+        The former one contains three classes for loading data, preparing data for optimization
+        and building an optimization model for analysis. The latter one is acting like a main method,
+        i.e., <code>$python ./run_analysis.py</code> will run the whole optimization
+        given the right input data in <b><font color="green">./data/</font></b> directory.
+        In <code><font color="green">run_analysis.py</font> </code>, you first need to load data.
+        Class <code><font color="blue">DataLoader</font> </code> in <code><font color="green">optimization.py</font> </code>
+        will take care of it for you. You just need to instantiate a <code><font color="blue">DataLoader</font> </code>
+        object with a list of all paths pointing to input csvs.
+        Next, we need to instantiate a <code><font color="blue">Data</font> </code> object with
+            a <b><code><font color="blue">DataLoader</font> </code></b> object as an input.
+            A <b><code><font color="blue">Data</font> </code></b> object holds
+        information such as parameters, sets, etc for optimization. Finally, we need to instantiate
+        an <b><code><font color="blue">Optimizer</font> </code></b> object to setup the optimization problem and solve it for us.
+        It has a method called <code><font color="blue">optimize</font> </code> which calls a solver to solve
+        the optimization model. Here the default solver is CBC. Finally, if the solve is successful,
+        we write optimal solutions as csv files. Here is the snippet of what we have outlined:</p>
     <pre>
       <code>
-
-          list = pd.Datafram({})
-          <font color="blue">def</font> my_fun(x, y):
-            x = x+ y
-            <font color="blue">return</font> x
+          <font color="green">import</font> glob
+          <font color="green">import</font> optimization
+          list_all_input_csvs = glob.glob("./data/*.csv")
+          dl = optimization.DataLoader(<font color="red">input_files=</font>list_all_input_csvs)
+          data = optimization.Data(dl)
+          optimizer = optimization.Optimizer(data)
+          status = optimizer.optimize(<font color="red">WriteLpFlag=</font><font color="blue">True</font>)
+          <font color="blue">if</font> status == 1:
+            output_df_dict = data.get_output_reports(optimizer)
+          <font color="blue">for</font> key, df <font color="blue">in</font> output_df_dict.items():
+                out_name = 'optimizer_' + key
+          df.to_csv(''.join(["./data/", out_name, '.csv']), <font color="red">index=</font><font color="blue">False</font>)
       </code>
     </pre>
+
+
+
+
 
 </html>
