@@ -128,7 +128,8 @@
         counter-reset: item
         }
         li {
-        display: block
+        display: block;
+
         }
         li:before {
         content: counters(item, ".") ". ";
@@ -204,9 +205,9 @@
         or all of them can be uncertain or random, and you may have their probability distribution, or not.
         Depending on which set is random, one might adopt different approaches to model and solve the underlying problem.
 
-        In general, there are four common approaches to optimization under uncertainty:</p>
+        In general, there are four common approaches for optimization under uncertainty:</p>
         <ol>
-            <li><b>Robust Optimization Models</b></li>
+            <li><b><font color="" size="4">Robust Optimization Models</font></b></li>
             In these models, one considers the worst possible outcome and
             optimizes decisions based on that. Finding the worst possible outcome is itself an optimization problem
             which is called the subproblem and must be solved.
@@ -268,21 +269,21 @@
             We won't go much into details in this tutorial. There are plenty of good resources online that interested readers may consult with.
             <br>
             <br>
-            <li><b>Deterministic Equivalent Models</b>
+            <li><b><font color="" size="4">Deterministic Equivalent Models</font></b>
+                <br>
             In these models, we replace the problem with uncertain parameters
             with a deterministic equivalent formulation. These models are generally easy to understand
             and some of them are practical. There are three common methods to obtain
             a deterministic equivalent model:
             <br>
                 <ol>
-                <li><b>Estimate method</b></li>
+                    <li><b><font color="" size="4">Estimate method</font></b></li>
                 This is the simplest approach to deal with uncertain parameters in a mathematical optimization problem
                 where we set a deterministic value for each uncertain parameter such as their mean or
                 their quantile estimation, depending on business requirements. For example, assume that
                 a minimization objective
                 function like <span class="math inline">$$\textbf{min}\ c_1x_1+\cdots+c_nx_n$$</span>
-                has uncertain coefficients, and <span class="math inline">$c_1, c_2, \cdots, c_n$</span> are normal iid
-                random variables
+                has uncertain coefficients, and <span class="math inline">$c_1, c_2, \cdots, c_n$</span> are random <em>iid</em> normal variables
                 with mean  <span class="math inline">$\mu_i, i=1,2,\cdots,n$</span>,
                 and standard deviation <span class="math inline">$\sigma_{i}, i=1,2,\cdots,n$</span>.
                 Here, one can ignore variability and replace uncertain objective function
@@ -292,9 +293,14 @@
                 which leads to <span class="math inline">$$\textbf{min}\ (\mu_1+\mathcal{z}_{0.95}\sigma_1)x_1+
                 \cdots+(\mu_n+\mathcal{z}_{0.95}\sigma_n)x_n.$$</span>
 
+                Here, <span class="math inline">$\mu_i+\mathcal{z}_{0.95}\sigma_i$</span>
+                    is the 95%-quantile of the uncertain parameter <span class="math inline">$c_i$</span>.
+                    This 95%-quantile can be derived analytically as what we showed above,
+                    or be a non-parametric estimate via a Machine Learning algorithm such as <em>Quantile Regression Forests</em>.
+                    <br>
+
                 Note that in the above formulation, we consider 95%-quantile values for each coefficient individually.
-                One may want to minimize 95%-quantile of the objective function instead. This makes the problem nonlinear.
-                <br></br>
+                One may instead want to minimize 95%-quantile of the objective function, which is nonlinear.
                 Assume that <span class="math inline">$c_1, c_2, \cdots, c_n$</span>
                 have a multivariate normal distribution with mean vector <span class="math inline">$\mu=[\mu_i], i=1,2,\cdots,n$</span>,
                 and covariance matrix <span class="math inline">$\Sigma=[\sigma_{ij}], i,j=1,2,\cdots,n$</span>. Therefore,
@@ -309,28 +315,27 @@
                 This <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.534.3911&rep=rep1&type=pdf">reference</a>
                 provides more technical details of how one can solve this optimization problem.
                 <br><br>
-                The above reformulation is for cases where objective function is uncertain.
+                Above reformulations are for cases where objective function is uncertain.
                 However, there are many problems in practice that we have uncertainty in constraints.
                 Here, we explain how to deal with inequality constraints. For equality constraint,
                 this method does not produce meaningful deterministic formulation.
                 <em>Expected violation penalty method</em> which we explain later is a better
                 choice when we have uncertainty in equality constraints. Now, assume an inequality constraint like
                 <span class="math inline">$$a_1x_1+\cdots+a_nx_n \leq b$$</span>
-                has uncertain coefficients, and <span class="math inline">$a_1, a_2, \cdots, a_n$</span> are normal iid
-                random variables
+                has uncertain coefficients, and <span class="math inline">$a_1, a_2, \cdots, a_n$</span> are random <em>iid</em>
+                normal variables
                 with mean  <span class="math inline">$\mu_i, i=1,2,\cdots,n$</span>,
                 and standard deviation <span class="math inline">$\sigma_{i}, i=1,2,\cdots,n$</span>.
-                Again, one may ignore variability and replace uncertain parameters with their mean and get
-                with <span class="math inline">$$\mu_1x_1+\cdots+\mu_nx_n \leq b.$$</span>
+                Again, one may ignore variability and replace uncertain parameters with their mean and get <span class="math inline">$$\mu_1x_1+\cdots+\mu_nx_n \leq b.$$</span>
                 Or, one might be interested in cases where this constraint is satisfied
                 when uncertain parameters are at 95%-quantile
-                (5%-quantile for <span class="math inline">$\geq$</span> inequality sign.)
+                (5%-quantile for <span class="math inline">$\geq$</span> inequality sign)
                 which leads to <span class="math inline">$$ (\mu_1+\mathcal{z}_{0.95}\sigma_1)x_1+
                 \cdots+(\mu_n+\mathcal{z}_{0.95}\sigma_n)x_n\leq b.$$</span>
-                Same as what we observe for uncertain objective function where we are interested in 95%-quantile of the constraint,
-            the formulation is different. In the next section (<em>Chance constraint optimization</em>) we explain how to deal with such cases.
+                Same as what we observe for uncertain objective function where we are interested in 95%-quantile of the constraint expression,
+            the formulation is different. In the next section (<em>Chance constraint optimization</em>), we explain how to deal with such cases.
                 <br><br>
-                <li><b>Chance constraint optimization</b></li>
+                    <li><b><font color="" size="4">Chance constraint optimization</font></b></li>
                 In this approach, we estimate or guess the highly possible outcome of random parameters.
                 Our goal is to find an optimal solution while allowing a subset of the constraints to be violated
                 at an acceptable confidence level, or achieving an acceptable level of reliability. For an inequality constraint like
@@ -341,7 +346,7 @@
                 we can write the deterministic formulation, however, the deterministic formulation is not always convex.
                 It is convex if the probability distribution of the parameters is symmetric (like normal distribution),
                 or positively skewed (like exponential distribution). Lets assume that
-                <span class="math inline">$a_1, a_2, \cdots, a_n$</span> are normal random variables,
+                <span class="math inline">$a_1, a_2, \cdots, a_n$</span> are random normal variables,
                 and <span class="math inline">$E(a_i)=\mu_i, i\in \{1,2, \cdots, n\}$</span>,
                 <span class="math inline">$Var(a_i)=\sigma_{ii}, i\in \{1,2, \cdots, n\}$</span>, and
                 <span class="math inline">$Cov(a_i, a_j)=\sigma_{i,j}, i \neq j\in \{1,2, \cdots, n\}$</span>.
@@ -371,7 +376,7 @@
                 <span class="math inline">$Pr\{a_1x_1+\cdots+a_nx_n \leq b\}\geq 1-\epsilon$</span> is satisfied.
 
                 <br><br>
-                <li><b>Expected violation penalty method</b></li>
+                    <li><b><font color="" size="4">Expected violation penalty method</font></b></li>
                 This method is well suited for problems where uncertainty is present in constraints.
                 In the case of uncertain constraints, we are interested in containing or minimizing their violations
                 rather than making sure if they are satisfied or not. In other word, uncertain constraints are treated as soft constraints.
@@ -429,9 +434,10 @@
                 Then, we have:
                 <div style="left;" class="math display">
                         \[
-                        \left. \begin{array}{ll}
-                        E[\text{max}\{0, a_1x_1+\cdots+a_nx_n -b\}]\approx\sum_{k=1}^{K}{\pi_kv_k}&\\
-                        \text{where}&\\
+                    \min E[\text{max}\{0, a_1x_1+\cdots+a_nx_n -b\}]\approx
+                        \left\{ \begin{array}{ll}
+                         \min \sum_{k=1}^{K}{\pi_kv_k}&\\
+                        \text{s.t.}&\\
                         v_k\geq 0&\forall k\\
                         v_k\geq a_1x_1+\cdots+a_nx_n -b_k&\forall k\\
                         \end{array}
@@ -442,31 +448,33 @@
                 <br><br>
             </ol></li>
 
-            <li><b>Recourse Models</b>
+            <li><b><font color="" size="4">Recourse Models</font></b>
+                <br>
             In this approach generally you can take corrective actions when you observe
             the true value of an uncertain parameter. These models are also known as stochastic programming models
             which include two main models: Two-Stage Models and Multi-Stage Models.
             <ol>
-                <li>Two-Stage Models</li>
+                <li><font color="" size="4">Two-Stage Models</font></li>
                 In two stage models, we have two types of decision variables. First stage decision variables
                 also known as <em>here-and-now</em> decisions are those that we make BEFORE a
                 realization of random parameters become known. And, second stage decisions are recourse decision
                 which we make AFTER a realization of random parameters become known.
                 <br><br>
-                <li>Multi-Stage Models</li>
+                <li><font color="" size="4">Multi-Stage Models</font></li>
                 Multi-Stage models are those that we need to make recourse and corrective decisions
                 at successive stages because the information is being known at every stage we move forward.
             A good example is when we are planning for multiple time periods and in each time period
             we only have access to past information. Therefore, in these models we need to be careful to satisfy
             nonanticipativity constraint which is a constraint that limits the  choice of the decisions
-            to the information that has been revealed so far. We found
-            <a href="https://www2.isye.gatech.edu/people/faculty/Alex_Shapiro/SPbook.pdf">Lectures on Stochastic Programming by Shapiro et. al</a>
-            and
-            <a href="http://homepages.cae.wisc.edu/~linderot/classes/ie495/index.html">these course materials by Jeff Linderoth</a> very useful
-            for interested readers.
+            to the information that has been revealed so far.
             </ol></li>
+            <br>
+            In this tutorial, we don't go into details of stochastic programming. Interested readers can consult with
+            <a href="https://www2.isye.gatech.edu/people/faculty/Alex_Shapiro/SPbook.pdf">Lectures on Stochastic Programming by Shapiro et. al</a>
+            and/or
+            <a href="http://homepages.cae.wisc.edu/~linderot/classes/ie495/index.html">these course materials by Jeff Linderoth</a>.
             <br><br>
-            <li><b>Dynamic Programming</b></li>
+            <li><b><font color="" size="4">Dynamic Programming</font></b></li>
             In Dynamic programming (DP), the assumption is that we are
             in some <b>State</b>, and based on the state we are in, we need to make a decision (<b>Action</b>),
             then randomness happens, and this randomness with some probability (<b>Transition Probability</b>)
@@ -492,14 +500,14 @@
     or source products to satisfy customers' monthly demand (
     <span class="math inline">$D_{nt}, \ t=1,2,\cdots,12$</span>) for a year, and Demand is not known ahead of decision making.
         The production cost for product <span class="math inline">$n$</span> is
-        <span class="math inline">$c_n.$</span>
-        This plant sells each
+        <span class="math inline">$c_n,$</span> and
+        this plant sells each
         product at price <span class="math inline">$p_{n}\geq c_{n}.$</span> In the case of shortage,
         this plant needs to source at a higher price <span class="math inline">$p^H_{n},$</span> and
         in the case of overage it has to sell at lower price
     <span class="math inline">$p^L_{n}\leq c_n.$</span>
-    This plant has an efficiency rate of <span class="math inline">$r_{n}\leq 1$</span>.
-    Total production capacity in each month depends on the availability of raw material.
+    Product <span class="math inline">$n$</span> is produced with efficiency rate of <span class="math inline">$r_{n}\leq 1$</span> in this plant.
+    Total production capacity in each month depends on the availability of raw material, and
     <span class="math inline">$L_{t}$</span> is the total monthly capacity in units.
     We are looking for the best set of sourcing and production decisions that maximizes total profit.
     Let <span class="math inline">$X_{nt}$</span>,
@@ -524,7 +532,7 @@
     If we want to use stochastic programming to solve this problem, we need to use Two-Stage model where
     <span class="math inline">$X_{nt}s$</span> are first stage (here-and-now) decision variables, and <span class="math inline">$O_{nt}s$</span>
     and <span class="math inline">$U_{nt}s$</span> are second stage (recourse) decision variables. Also, note that if we can hold inventory
-    and use it to buffer against uncertainty, we have to either use Dynamic programming or Multi-Stage stochastic programming.
+    and use it to buffer against uncertainty, we have to use either Dynamic programming or Multi-Stage stochastic programming.
     However, assume that we are given a set of possible scenarios with their respective probabilities on what value
     demand of product <span class="math inline">$n$</span> at month <span class="math inline">$t$</span> might take.
     This means given scenario <span class="math inline">$k=1,2,\cdots, K$</span>, we have demand value
@@ -572,7 +580,7 @@
         It has a method called <b><code><font color="blue" size="4">optimize</font></code></b>
         which calls a solver to solve
         the optimization model. Here the default solver is <a href="https://projects.coin-or.org/Cbc">CBC</a>. Finally, if the solve is successful,
-        we write optimal solutions as CSV files. Here is the snippet of what we have outlined:</p>
+        we write optimal solutions as CSV files. Here is the code snippet of what we have outlined:</p>
     <pre>
       <code>
           <font color="green">import</font> glob
@@ -589,8 +597,7 @@
             output_df_dict = data.get_output_reports(optimizer)
           <font color="blue">for</font> key, df <font color="blue">in</font> output_df_dict.items():
                 out_name = 'optimizer_' + key
-
-          df.to_csv(''.join(["./data/", out_name, '.csv']), <font color="red">index=</font><font color="blue">False</font>)
+                df.to_csv(''.join(["./data/", out_name, '.csv']), <font color="red">index=</font><font color="blue">False</font>)
       </code>
     </pre>
 
