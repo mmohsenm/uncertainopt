@@ -1,0 +1,4 @@
+product,description,normal_price,lower_price,higher_price,efficiency_rate,production_cost
+p1,product one,100,90,150,0.9,95
+p2,product two,100,80,160,0.95,90
+p3,product three,100,70,150,0.98,80
