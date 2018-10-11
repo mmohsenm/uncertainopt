@@ -211,7 +211,7 @@
             In these models, one considers the worst possible outcome and
             optimizes decisions based on that. Finding the worst possible outcome is itself an optimization problem
             which is called the subproblem and must be solved.
-            As mentioned <a href="https://dspace.mit.edu/openaccess-disseminate/1721.1/66198">here</a>,
+            As mentioned <a href="https://epubs.siam.org/doi/10.1137/080734510">here</a>,
             in robust optimization, the uncertainty is not stochastic, but rather deterministic and set-based.
             For example, assume that in the above optimization problem, constraint coefficients belong
             to an uncertainty set like:
@@ -476,11 +476,11 @@
             <br><br>
             <li><b><font color="" size="4">Dynamic Programming</font></b></li>
             In Dynamic programming (DP), the assumption is that we are
-            in some <b>State</b>, and based on the state we are in, we need to make a decision (<b>Action</b>),
+            in some <b>State</b>, and based on the current state, we need to make a decision (<b>Action</b>),
             then randomness happens, and this randomness with some probability (<b>Transition Probability</b>)
-            take us to another state and give us some reward based on our earlier decision. Now, we are in a new state
+            takes us to another state and gives us some reward based on our earlier decision. Now, we are in a new state
             and we need to make a new decision and go on. You can see that our decision is a
-            function of state that we are in currently. This function that maps states to decisions is
+            function of the current state. This function that maps states to decisions is
             called <b>Policy</b>,
             and we want to find a policy that on average yields higher sums of rewards. Such policy is called
             <b>Optimal Policy</b>.<br>
