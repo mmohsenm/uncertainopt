@@ -74,6 +74,7 @@
         margin-left: 110px;
         margin-top: 0px;
         margin-bottom: 0px;
+        font-size:16px;
         }
 
         h1 {
@@ -123,7 +124,15 @@
         ol{
         padding-right: 110px;
         padding-left: 110px;
-        LINE-HEIGHT:25px
+        LINE-HEIGHT:25px;
+        counter-reset: item
+        }
+        li {
+        display: block
+        }
+        li:before {
+        content: counters(item, ".") ". ";
+        counter-increment: item
         }
 
         ul{
@@ -132,6 +141,8 @@
         padding-left: 110px;
         LINE-HEIGHT:25px;
         }
+
+
 
         p{
         text-align: justify;LINE-HEIGHT:25px
@@ -176,7 +187,7 @@
     \text{s.t.}\\
     &a_{11}x_{1}+a_{21}x_{2}+\cdots+x_{n1}x_{n}&\leq b_1\\
     &\vdots&\vdots\\
-    &a_{1m}x_{1}+a_{2m}x_{2}+\cdots+x_{mn}x_{n}&\leq b_m\\
+    &a_{1m}x_{1}+a_{2m}x_{2}+\cdots+a_{nm}x_{n}&\leq b_m\\
     &x_1, x_2, \cdots, x_n \geq 0&\\
     &\text{Some}\ x_i\text{s are Integer}
     \end{array}
@@ -191,7 +202,7 @@
         and <span class="math inline">$b_{1}, b_{2}, \cdots, b_{m}$</span>
         are right hand side parameters. Either of these parameters
         or all of them can be uncertain or random, and you may have their probability distribution, or not.
-        Depending on which set is random, one might adopt different approach to model and solve the underlying problem.
+        Depending on which set is random, one might adopt different approaches to model and solve the underlying problem.
 
         In general, there are four common approaches to optimization under uncertainty:</p>
         <ol>
@@ -245,7 +256,7 @@
                 \text{min}& \sum_{i=1}^{n}{c_ix_i}&\\
                 \text{s.t.}\\
                 &\sum_{i=1}^{n}{a_{ij}x_i}\leq b_j&j=1,2,\cdots, m\\
-                &\sum_{i=1}^{n}{u_{ij}\lambda_{ij}}-\sum_{i=1}^{n}{l_{ij}\mu_{ij}}\leq b_j&j=1,2,\cdots, m\\
+                &\sum_{i=1}^{n}{\lambda_{ij}u_{ij}}-\sum_{i=1}^{n}{\mu_{ij}l_{ij}}\leq b_j&j=1,2,\cdots, m\\
                 &x_{i}-\lambda_{ij}+\mu_{ij} = 0&i=1,2,\cdots, n\quad j=1,2,\cdots, m\\
                 &x_{i}\geq 0 & i=1,2,\cdots, n\quad j=1,2,\cdots, m\\
                 &\lambda_{ij}\geq 0,\ \mu_{ij}\geq0& i=1,2,\cdots, n\quad j=1,2,\cdots, m\\
@@ -257,12 +268,13 @@
             We won't go much into details in this tutorial. There are plenty of good resources online that interested readers may consult with.
             <br>
             <br>
-            <li><b>Deterministic Equivalent Models</b></li>
+            <li><b>Deterministic Equivalent Models</b>
             In these models, we replace the problem with uncertain parameters
             with a deterministic equivalent formulation. These models are generally easy to understand
             and some of them are practical. There are three common methods to obtain
             a deterministic equivalent model:
             <br>
+                <ol>
                 <li><b>Estimate method</b></li>
                 This is the simplest approach to deal with uncertain parameters in a mathematical optimization problem
                 where we set a deterministic value for each uncertain parameter such as their mean or
@@ -282,7 +294,7 @@
 
                 Note that in the above formulation, we consider 95%-quantile values for each coefficient individually.
                 One may want to minimize 95%-quantile of the objective function instead. This makes the problem nonlinear.
-            <br></br>
+                <br></br>
                 Assume that <span class="math inline">$c_1, c_2, \cdots, c_n$</span>
                 have a multivariate normal distribution with mean vector <span class="math inline">$\mu=[\mu_i], i=1,2,\cdots,n$</span>,
                 and covariance matrix <span class="math inline">$\Sigma=[\sigma_{ij}], i,j=1,2,\cdots,n$</span>. Therefore,
@@ -336,7 +348,8 @@
                 Then, the deterministic equivalent of
                 <span class="math inline">$$Pr\{a_1x_1+\cdots+a_nx_n \leq b\}\geq 1-\epsilon,$$</span> is
                 <span class="math inline">$$\sum_{i=1}^{n}{\mu_ix_i}+\Phi^{-1}(1-\epsilon)\sqrt{\sum_{i=1}^{n}\sum_{j=1}^{n}{x_ix_j\sigma_{ij}}} \leq b.$$</span>
-                As you can see, this constraint is not linear anymore (it is SOCP). You can see even with the simplest assumption,
+                As you can see, this constraint is not linear anymore (This constraint is now a <em>Second-order Conic Constraint</em>).
+                    You can see even with the simplest assumption,
                 the resulting formulation is hard. Another way is to use MIP-approximation to obtain a deterministic formulation for
                 that probability constraint. Assume that you don't know the probability distribution of
                 the parameter values (<span class="math inline">$a_1, a_2, \cdots, a_n$</span>),
@@ -427,14 +440,13 @@
                 </div>
                 This approximation increases the size of problem but preserves the linearity.
                 <br><br>
+            </ol></li>
 
-            </ul>
-
-            <li><b>Recourse Models</b></li>
+            <li><b>Recourse Models</b>
             In this approach generally you can take corrective actions when you observe
             the true value of an uncertain parameter. These models are also known as stochastic programming models
             which include two main models: Two-Stage Models and Multi-Stage Models.
-            <ul>
+            <ol>
                 <li>Two-Stage Models</li>
                 In two stage models, we have two types of decision variables. First stage decision variables
                 also known as <em>here-and-now</em> decisions are those that we make BEFORE a
@@ -444,7 +456,7 @@
                 <li>Multi-Stage Models</li>
                 Multi-Stage models are those that we need to make recourse and corrective decisions
                 at successive stages because the information is being known at every stage we move forward.
-            A good example is when we are planning for multiple time periods and each time period
+            A good example is when we are planning for multiple time periods and in each time period
             we only have access to past information. Therefore, in these models we need to be careful to satisfy
             nonanticipativity constraint which is a constraint that limits the  choice of the decisions
             to the information that has been revealed so far. We found
@@ -452,18 +464,19 @@
             and
             <a href="http://homepages.cae.wisc.edu/~linderot/classes/ie495/index.html">these course materials by Jeff Linderoth</a> very useful
             for interested readers.
-            </ul>
+            </ol></li>
+            <br><br>
             <li><b>Dynamic Programming</b></li>
             In Dynamic programming (DP), the assumption is that we are
-            in some <font color="blue">State</font>, and based on the state we are in, we need to make a decision (<font color="blue">Action</font>),
-            then randomness happens, and this randomness with some probability (<font color="blue">Transition Probability</font>)
+            in some <b>State</b>, and based on the state we are in, we need to make a decision (<b>Action</b>),
+            then randomness happens, and this randomness with some probability (<b>Transition Probability</b>)
             take us to another state and give us some reward based on our earlier decision. Now, we are in a new state
             and we need to make a new decision and go on. You can see that our decision is a
             function of state that we are in currently. This function that maps states to decisions is
-            called <em><font color="blue">Policy</font></em>,
+            called <b>Policy</b>,
             and we want to find a policy that on average yields higher sums of rewards. Such policy is called
-            <em><font color="blue">Optimal Policy</font></em>.<br>
-            Optimal policy satsifies a set of equations known as <em><font color="blue">Bellman Equations</font></em>,
+            <b>Optimal Policy</b>.<br>
+            Optimal policy satsifies a set of equations known as <b>Bellman Equations</b>,
             and DP is an algorithm that finds the optimal policy based on Bellman equations in discrete state-action spaces.
         </ol>
 
@@ -533,38 +546,50 @@
             \]</div>
     <p class="mrg">
         We use <b>PuLp</b> to model and solve a numerical instance of this problem.
-        Please refer to <b><font color="green">/code</font></b> directory <a href="https://github.com/mmohsenm/uncertainopt">here</a> for more details.
-        In this directory, there are two Python files: <code><font color="green">optimization.py</font> </code> and
-        <code><font color="green">run_analysis.py</font> </code>.
+        Please refer to <b><font color="green" size="4">/code</font></b> directory <a href="https://github.com/mmohsenm/uncertainopt">here</a> for more details.
+        In this directory, there are two Python files: <b><code><font color="green" size="4">optimization.py</font> </code></b>
+        and
+        <b><code><font color="green" size="4">run_analysis.py</font> </code></b>.
         The former one contains three classes for loading data, preparing data for optimization
         and building an optimization model for analysis. The latter one is acting like a main method,
-        i.e., <code>$python ./run_analysis.py</code> will run the whole optimization
-        given the right input data in <b><font color="green">./data/</font></b> directory.
-        In <code><font color="green">run_analysis.py</font> </code>, you first need to load data.
-        Class <code><font color="blue">DataLoader</font> </code> in <code><font color="green">optimization.py</font> </code>
-        will take care of it for you. You just need to instantiate a <code><font color="blue">DataLoader</font> </code>
-        object with a list of all paths pointing to input csvs.
-        Next, we need to instantiate a <code><font color="blue">Data</font> </code> object with
-            a <b><code><font color="blue">DataLoader</font> </code></b> object as an input.
-            A <b><code><font color="blue">Data</font> </code></b> object holds
+        i.e.,
+        <strong><code>$python ./run_analysis.py</code></strong> will run the whole optimization
+        given the right input data in <b><font color="green" size="4">./data/</font></b> directory.
+        <br><br>
+
+        In <b><code><font color="green" size="4">run_analysis.py</font></code></b>, you first need to load data.
+        Class <b><code><font color="blue" size="4">DataLoader</font></code></b> in
+        <b><code><font color="green" size="4">optimization.py</font></code></b>
+        will take care of it for you. You just need to instantiate a
+        <b><code><font color="blue" size="4">DataLoader</font></code></b>
+        object with a list of all paths pointing to input CSVs.
+        Next, we need to instantiate a <b><code><font color="blue" size="4">Data</font></code></b> object with
+            a <b><code><font color="blue" size="4">DataLoader</font></code></b> object as an input.
+            A <b><code><font color="blue" size="4">Data</font></code></b> object holds
         information such as parameters, sets, etc for optimization. Finally, we need to instantiate
-        an <b><code><font color="blue">Optimizer</font> </code></b> object to setup the optimization problem and solve it for us.
-        It has a method called <code><font color="blue">optimize</font> </code> which calls a solver to solve
-        the optimization model. Here the default solver is CBC. Finally, if the solve is successful,
-        we write optimal solutions as csv files. Here is the snippet of what we have outlined:</p>
+        an <b><code><font color="blue" size="4">Optimizer</font></code></b> object to setup the optimization problem
+        and solve it.
+        It has a method called <b><code><font color="blue" size="4">optimize</font></code></b>
+        which calls a solver to solve
+        the optimization model. Here the default solver is <a href="https://projects.coin-or.org/Cbc">CBC</a>. Finally, if the solve is successful,
+        we write optimal solutions as CSV files. Here is the snippet of what we have outlined:</p>
     <pre>
       <code>
           <font color="green">import</font> glob
           <font color="green">import</font> optimization
+
           list_all_input_csvs = glob.glob("./data/*.csv")
+
           dl = optimization.DataLoader(<font color="red">input_files=</font>list_all_input_csvs)
           data = optimization.Data(dl)
           optimizer = optimization.Optimizer(data)
           status = optimizer.optimize(<font color="red">WriteLpFlag=</font><font color="blue">True</font>)
+
           <font color="blue">if</font> status == 1:
             output_df_dict = data.get_output_reports(optimizer)
           <font color="blue">for</font> key, df <font color="blue">in</font> output_df_dict.items():
                 out_name = 'optimizer_' + key
+
           df.to_csv(''.join(["./data/", out_name, '.csv']), <font color="red">index=</font><font color="blue">False</font>)
       </code>
     </pre>
