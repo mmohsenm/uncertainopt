@@ -186,7 +186,7 @@
     \left. \begin{array}{lll}
     \text{min}& c_1x_1+c_2x_2+\cdots+c_nx_n&\\
     \text{s.t.}\\
-    &a_{11}x_{1}+a_{21}x_{2}+\cdots+x_{n1}x_{n}&\leq b_1\\
+    &a_{11}x_{1}+a_{21}x_{2}+\cdots+a_{n1}x_{n}&\leq b_1\\
     &\vdots&\vdots\\
     &a_{1m}x_{1}+a_{2m}x_{2}+\cdots+a_{nm}x_{n}&\leq b_m\\
     &x_1, x_2, \cdots, x_n \geq 0&\\
@@ -279,8 +279,8 @@
                 <ol>
                     <li><b><font color="" size="4">Estimate method</font></b></li>
                 This is the simplest approach to deal with uncertain parameters in a mathematical optimization problem
-                where we set a deterministic value for each uncertain parameter such as their mean or
-                their quantile estimation, depending on business requirements. For example, assume that
+                where we set a deterministic value for each uncertain parameter. This deterministic value can be their mean,
+                their quantile estimation, or any other statistical measures depending on business requirements. For example, assume that
                 a minimization objective
                 function like <span class="math inline">$$\textbf{min}\ c_1x_1+\cdots+c_nx_n$$</span>
                 has uncertain coefficients, and <span class="math inline">$c_1, c_2, \cdots, c_n$</span> are random <em>iid</em> normal variables
@@ -349,7 +349,7 @@
                 <span class="math inline">$a_1, a_2, \cdots, a_n$</span> are random normal variables,
                 and <span class="math inline">$E(a_i)=\mu_i, i\in \{1,2, \cdots, n\}$</span>,
                 <span class="math inline">$Var(a_i)=\sigma_{ii}, i\in \{1,2, \cdots, n\}$</span>, and
-                <span class="math inline">$Cov(a_i, a_j)=\sigma_{i,j}, i \neq j\in \{1,2, \cdots, n\}$</span>.
+                <span class="math inline">$Cov(a_i, a_j)=\sigma_{ij}, i \neq j\in \{1,2, \cdots, n\}$</span>.
                 Then, the deterministic equivalent of
                 <span class="math inline">$$Pr\{a_1x_1+\cdots+a_nx_n \leq b\}\geq 1-\epsilon,$$</span> is
                 <span class="math inline">$$\sum_{i=1}^{n}{\mu_ix_i}+\Phi^{-1}(1-\epsilon)\sqrt{\sum_{i=1}^{n}\sum_{j=1}^{n}{x_ix_j\sigma_{ij}}} \leq b.$$</span>
@@ -455,8 +455,8 @@
             which include two main models: Two-Stage Models and Multi-Stage Models.
             <ol>
                 <li><font color="" size="4">Two-Stage Models</font></li>
-                In two stage models, we have two types of decision variables. First stage decision variables
-                also known as <em>here-and-now</em> decisions are those that we make BEFORE a
+                In two stage models, we have two types of decision variables. First stage decision variables,
+                also known as <em>here-and-now</em> decisions, are those that we make BEFORE a
                 realization of random parameters become known. And, second stage decisions are recourse decision
                 which we make AFTER a realization of random parameters become known.
                 <br><br>
