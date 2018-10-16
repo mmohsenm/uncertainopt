@@ -595,7 +595,7 @@
 
           <font color="blue">if</font> status == 1:
             output_df_dict = data.get_output_reports(optimizer)
-          <font color="blue">for</font> key, df <font color="blue">in</font> output_df_dict.items():
+            <font color="blue">for</font> key, df <font color="blue">in</font> output_df_dict.items():
                 out_name = 'optimizer_' + key
                 df.to_csv(''.join(["./data/", out_name, '.csv']), <font color="red">index=</font><font color="blue">False</font>)
       </code>
